@@ -1,0 +1,26 @@
+[
+   {
+      "nome": {
+         "type": "String",
+         "required": true
+      },
+      "email": {
+         "type": "String",
+         "required": true
+      },
+      "idade": {
+         "type": "Number",
+         "required": true
+      }
+   },
+   {
+      "nome": "Jefferson Silva",
+      "idade": 17,
+      "email": "nhac.developer@gmail.com"
+   },
+   {
+      "nome": "Jeffrey",
+      "idade": 21,
+      "email": "edu.jefferson@efa.org.br"
+   }
+]

@@ -1,0 +1,19 @@
+<h2>Olá mundo!</h2>
+
+<form action="/usr-add" method="POST">
+    <h2>Adicionar usuário</h2>
+    <hr/>
+    <input required type="text" name="user_name" placeholder="Nome">
+    <input required type="number" name="user_idade" placeholder="Idade">
+    <input required type="text" name="user_email" placeholder="Email">
+    <button type="submit">Cadastrar</button>
+</form>
+<form action="/update-usr" method="post">
+    <h2>Atualizar usuário</h2>
+    <hr/>
+    <input type="text" name="n_user_name" placeholder="Nome">
+    <input type="number" name="n_user_idade" placeholder="Idade">
+    <input required type="text" name="n_user_email" placeholder="Email">
+    <button type="submit">Atualizar</button>
+</form>
+<a href="/search">Pesquisar</a>
