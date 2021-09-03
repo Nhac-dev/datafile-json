@@ -31,15 +31,11 @@ class UtilsDataFiles {
                         else if (val.includes("*") && !val.includes("/*/")) {
                             if (value[key].includes(`${val.replace("*", "")}`))
                                 dataList = value;
-                            else
-                                undefined;
                         }
                         else if (val.includes("/*/")) {
                             val = val.replace("/*/", "*");
                             if (value[key].includes(val))
                                 dataList = value;
-                            else
-                                undefined;
                         }
                         else {
                             dataList = undefined;
@@ -59,7 +55,6 @@ class UtilsDataFiles {
                 let dataList = "";
                 let dataReturn = undefined;
                 dataList = JSON.parse(yield fs_1.promises.readFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, "utf8"));
-                dataList.shift();
                 let key = Object.keys(search)[0];
                 let val = Object.values(search)[0];
                 dataList.map((value) => {
@@ -79,7 +74,7 @@ class UtilsDataFiles {
                 return dataReturn;
             }
             catch (error) {
-                return error;
+                throw new Error(error);
             }
         });
     }
@@ -181,6 +176,28 @@ class UtilsDataFiles {
             catch (error) {
                 throw new Error(error);
             }
+        });
+    }
+    DeleteOne(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let dataList = JSON.parse(yield fs_1.promises.readFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, "utf8"));
+            let key = Object.keys(search)[0];
+            let val = Object.values(search)[0];
+            dataList.map((value, index) => {
+                if (value[key] == val) {
+                    dataList.splice(index, 1);
+                }
+                else if (val.includes("*") && !val.includes("/*/")) {
+                    if (value[key].includes(`${val.replace("*", "")}`))
+                        dataList.splice(index, 1);
+                }
+                else if (val.includes("/*/")) {
+                    val = val.replace("/*/", "*");
+                    if (value[key].includes(val))
+                        dataList.splice(index, 1);
+                }
+            });
+            fs_1.promises.writeFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, JSON.stringify(dataList, undefined, 3)).catch((e) => { });
         });
     }
 }

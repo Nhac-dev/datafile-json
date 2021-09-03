@@ -6,14 +6,15 @@ const server = require("http").createServer(app)
 const DB = require("./model/db")
 const usr = require("./model/user")
 
+
+DB.NewCollection(usr.nameData, usr)
+
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 app.engine("handlebars", handlebars({defaultLayout: "main"}))
 app.set("view engine", "handlebars")
 
-
-DB.NewCollection(usr.nameData, usr)
 
 app.get("/", (req, res)=>{
     res.render("index")
@@ -27,7 +28,6 @@ app.get("/search", (req, res)=>{
 app.post("/usr-add", (req, res)=>{
     usr.FindOne({email: req.body.user_email}).then((data)=>{
         if(data){
-            console.log(data);
             res.send("Esse dado existe! <a href=\"/\">Voltar ao inicio</a>")
         }else{
             usr.AddData({
@@ -42,6 +42,25 @@ app.post("/usr-add", (req, res)=>{
         res.redirect("/")
     })
 })
+
+app.post("/usr-delete", (req, res)=>{
+    usr.FindOne({email: req.body.user_email}).then((data)=>{
+        if(data){
+            usr.DeleteOne({email: req.body.user_email}).then(()=>{
+                res.redirect("/search")
+            }).catch((err)=>{
+                console.log(err);
+                res.redirect("/")
+            })
+        }else{
+            res.redirect("/")
+        }
+    }).catch(err=>{
+        console.log(err);
+        res.redirect("/")
+    })
+})
+
 
 app.post("/update-usr", (req, res)=>{
     usr.UpdateData({email: req.body.n_user_email}, {

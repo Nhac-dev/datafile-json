@@ -7,6 +7,7 @@ export class UtilsDataFiles{
     model!: {[z: string]: Model}
 
     constructor(){
+        
     }
 
     async Find(search?:{[name: string]: any}){
@@ -21,16 +22,13 @@ export class UtilsDataFiles{
                 let key = Object.keys(search)[0]
                 let val = Object.values(search)[0]
                 dataList.map((value:any)=>{
-                
                     if(value[key] == val){
                         dataList = value
                     }else if(val.includes("*") && !val.includes("/*/")){
                         if(value[key].includes(`${val.replace("*", "")}`)) dataList = value
-                        else undefined
                     }else if(val.includes("/*/")){
                         val = val.replace("/*/", "*")
                         if(value[key].includes(val)) dataList = value
-                        else undefined
                     }else{
                         dataList = undefined
                     }
@@ -51,8 +49,6 @@ export class UtilsDataFiles{
             
             dataList = JSON.parse(await fs.readFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, "utf8"));
             
-            dataList.shift()
-
             let key = Object.keys(search)[0]
             let val = Object.values(search)[0]
             dataList.map((value:any)=>{
@@ -66,8 +62,9 @@ export class UtilsDataFiles{
                 }
             })
             return dataReturn
-        } catch (error) {
-            return error
+        } catch (error: any) {
+            throw new Error(error);
+            
         }
     }
 
@@ -178,5 +175,25 @@ export class UtilsDataFiles{
         } catch (error: any) {
             throw new Error(error)
         }
+    }
+
+    async DeleteOne(search:{[name: string]: any}){
+        let dataList: any[] = JSON.parse(await fs.readFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, "utf8"));
+        
+        let key = Object.keys(search)[0]
+        let val = Object.values(search)[0]
+        dataList.map((value:any, index: number)=>{
+            if(value[key] == val){
+                dataList.splice(index, 1)
+            }else if(val.includes("*") && !val.includes("/*/")){
+                if(value[key].includes(`${val.replace("*", "")}`)) dataList.splice(index, 1)
+            }else if(val.includes("/*/")){
+                val = val.replace("/*/", "*")
+                if(value[key].includes(val)) dataList.splice(index, 1)
+            }
+        })
+
+        fs.writeFile(`${this.df.path}/${this.df.name}/collections/${this.nameData}.json`, JSON.stringify(dataList, undefined, 3)).catch((e)=>{})
+    
     }
 }
