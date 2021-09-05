@@ -24,6 +24,26 @@ app.get("/search", (req, res)=>{
     res.render("search")
 })
 
+app.get("/all-data", (req, res)=>{
+    usr.Find().then((data)=>{
+        let textToPrint = ``
+        data.forEach(date => {
+            textToPrint += `
+                |-----------------------------<br/>
+                | Email: ${date.email}<br/>
+                |-----------------------------<br/>
+                | Nome: ${date.nome || "Não informado"}<br/>
+                |-----------------------------<br/>
+                | Idade: ${date.idade || "Não informado"}<br/>
+                |-----------------------------<br/>
+            `
+        });
+        res.send(textToPrint)
+    }).catch((e)=>{
+        console.log(e);
+        res.redirect("/")
+    })
+})
 
 app.post("/usr-add", (req, res)=>{
     usr.FindOne({email: req.body.user_email}).then((data)=>{
